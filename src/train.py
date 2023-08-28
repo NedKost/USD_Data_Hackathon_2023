@@ -6,7 +6,7 @@ from sklearn.utils.class_weight import compute_sample_weight
 import joblib
 import warnings
 
-from data_preprocessing import preprocessed_data 
+from src.data_preprocessing import preprocessed_data 
 
 warnings.filterwarnings("ignore")
 
@@ -17,9 +17,11 @@ def train_model():
     # Create columns for non-Ordinal Features
     label_encoder = LabelEncoder()  
 
+    data = preprocessed_data(is_training=True)
+
     # Load the preprocessed data
-    X = preprocessed_data[0]
-    y = label_encoder.fit_transform(preprocessed_data[1])
+    X = data[0]
+    y = label_encoder.fit_transform(data[1])
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.30, random_state=500)
 
@@ -29,9 +31,5 @@ def train_model():
     gb_model.fit(X, y, sample_weight=sample_weights)
 
     # Save the trained model using joblib
-    model_filename = 'model_inputs_outputs/model/artifacts/trained_xgboost_model.joblib'
+    model_filename = 'src/model_inputs_outputs/model/artifacts/trained_xgboost_model.joblib'
     joblib.dump(gb_model, model_filename)
-
-
-if __name__ == "__main__":
-    train_model()
